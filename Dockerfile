@@ -93,6 +93,30 @@ RUN dracut --filesystems="ext4 vfat" --mdadmconf --force /boot/initramfs-3.10.0-
 # Adjust root account
 RUN passwd -d root && passwd -l root
 
+###############################
+# Magnetic Customizations
+###############################
 RUN echo "this worked" > /tmp/dg_test
+
+# Disable Spectre/Meltdown kernel patches
+RUN echo 'GRUB_CMDLINE_LINUX="${GRUB_CMDLINE_LINUX} noibrs noibpb nopti"' >> /etc/default/grub
+
+# Regenerate grub.cfg
+#RUN /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# Update all RPM packages
+RUN yum update all
+
+# SELinux - yum install libselinux-python
+RUN yum install libselinux-python
+
+# SELinux - Disable SELinux completely
+RUN sed -i 's/enforcing/disabled/g' /etc/selinux/config /etc/selinux/config
+
+# Systemd-journald - Make storage persistent
+RUN sed -i 's/#Storage=auto/Storage=persistent/' /etc/systemd/journald.conf
+
+# Boot persist the hostname
+RUN echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg
 
 # vim: set tabstop=4 shiftwidth=4:
