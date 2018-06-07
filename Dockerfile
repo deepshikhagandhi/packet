@@ -105,7 +105,7 @@ RUN echo 'GRUB_CMDLINE_LINUX="${GRUB_CMDLINE_LINUX} noibrs noibpb nopti"' >> /et
 #RUN /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
 
 # Update all RPM packages
-RUN yum update all
+RUN yum update
 
 # SELinux - yum install libselinux-python
 RUN yum install libselinux-python
